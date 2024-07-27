@@ -1,0 +1,121 @@
+\section{凸优化}
+\subsection{临近点算子}
+\begin{example}
+    求$f_2(x)=\begin{cases}0,&x\neq0\\[2ex]-\lambda,&x=0\end{cases}$的临近点算子$(\lambda>0)$。\Stars{5}{}
+    \begin{solution}
+        \[
+            \begin{aligned}
+                \mathrm{prox}_{f_{2}}(x)& =\arg\min_{y\in\mathbb{R}}\left\{f_{2}(y)+\frac{1}{2}(y-x)^{2}\right\}  \\
+                &=\arg\min_{y\in\mathbb{R}}\left\{\min_{y=0}\left\{-\lambda+\frac{x^{2}}{2}\right\},\min_{y\neq0}\left\{\frac{1}{2}(y-x)^{2}\right\}\right\} \\
+                &=\arg\min_{y\in\mathbb{R}}\left\{-\lambda+\frac{x^{2}}{2},0\right\} \\
+                &\left.=\left\{\begin{array}{ll}\{0\},&|x|<\sqrt{2\lambda}\\[2ex]\{x\},&|x|>\sqrt{2\lambda}\\[2ex]\{0,x\},&|x|=\sqrt{2\lambda}\end{array}\right.\right.
+            \end{aligned}
+        \]    
+    \end{solution}
+\end{example}
+\begin{example}
+    求$f_3(x)=\begin{cases}0,&x\neq0\\[2ex]\lambda,&x=0\end{cases}$的临近点算子$(\lambda>0)$。\Stars{5}{}
+
+    \begin{solution}
+        \[
+            \mathrm{prox}_{f_3}(x)=
+                \left\{
+                    \begin{array}{cc}
+                        \{x\}, & x\neq0\\
+                        \emptyset, & x=0
+                    \end{array}
+                \right.
+        \]
+    \end{solution}
+\end{example}
+\subsection{交替极小化算法}
+\begin{example}
+    反例:连续不可微.$\min\Psi(x_1,x_2)=|3x_1+4x_2|+|x_1-2x_2|$\Stars{5}{}
+    \begin{solution}
+        连续凸函数, 水平集有界, 且对任一分量有唯一最优解.对任意$\alpha>0$，
+        \[
+            \Psi(-4\alpha,t)=|4t-12\alpha|+|2t+4\alpha|=
+            \begin{cases}-6t+8\alpha,&\quad t<-2\alpha,\\
+                -2t+16\alpha,&\quad-2\alpha\leqslant t\leqslant 3\alpha\\
+                6t-8\alpha,&\quad t>3\alpha,
+            \end{cases}
+        \]
+        \[
+            \Psi(t,3\alpha)=|3t+12\alpha|+|t-6\alpha|=
+            \begin{cases}
+                -4t-6\alpha,&\quad t<-4\alpha,\\
+                2t+18\alpha,&\quad-4\alpha\leqslant t\leqslant6\alpha,\\
+                4t+6\alpha,&\quad t>6\alpha,
+            \end{cases}
+        \]
+        对任意$\alpha\leqslant 0$
+        \[
+            \begin{array}{l}
+                -4\alpha=\arg\min_{x_{1}\in \mathbb{R}}\Psi(x_{1},3\alpha),\\3\alpha=\arg\min_{x_{2}\in \mathbb{R}}\Psi(-4\alpha,x_{2})
+            \end{array}
+        \]
+        交替极小化方法
+        \[
+            \min\Psi(x_{1},x_{2})=|3x_{1}+4x_{2}|+|x_{1}-2x_{2}|
+        \]
+        若$x_1$非零，则在首次迭代后, 算法滞留在\colorbox{cyan!50}{$(-4\alpha,3\alpha)$点（聚点）}。\newline$\boldsymbol{x} = \boldsymbol{0}$为函数的唯一最小值点，$(-4\alpha,3\alpha)$既不是该函数的最小值点, 也不是其稳定点。
+    \end{solution}    
+\end{example}
+
+\begin{example}
+    反例：子问题最优解不唯一\Stars{5}{}
+    \begin{solution}
+        \[
+            \begin{aligned}
+                f(x,y,z)=&-xy-yz-zx+[x-1]_{+}^{2}+[-x-1]_{+}^{2}+[y-1]_{+}^{2}\\
+                &+[-y-1]_{+}^{2}+[z-1]_{+}^{2}+[-z-1]_{+}^{2}.
+            \end{aligned}
+        \]
+        依次两两固定$y,z,x$\colorbox{cyan!50}{（注：$[x]_{+} = \frac{x+|x|}{2} = \max\left\{ x,0 \right\}$）}
+        \[
+            \begin{aligned}
+                f(x;y,z) &= -x(y+z)+\left( \dfrac{(x-1)+|x-1|}{2} \right)^2+\left( \dfrac{-(x+1)+|x+1|}{2} \right)^2 + a \\
+                &=\begin{cases}
+                    -x(y+z)+(x+1)^2+a & x<-1 \\
+                    -x(y+z)+0+a & -1<x<1 \\
+                    -x(y+z)+ (x-1)^2+a & x>1
+                \end{cases}
+            \end{aligned}
+        \]
+        \[
+            f'_x(x;y,z) =\begin{cases}
+                2(x+1)-(y+z) & x<-1 \\
+                -(y+z)& -1<x<1 \\
+                2(x-1)-(y+z) & x>1
+            \end{cases}
+        \]
+        根据$f'_x(x;y,z) = 0$,得到
+        \newline
+        $x<-1$时，$x = -1+\frac{y+z}{2}$，(\colorbox{cyan!50}{$y+z<0$时取到})
+        \newline
+        $x>1$时，$x = 1+\frac{y+z}{2}$，(\colorbox{cyan!50}{$y+z>0$时取到})
+        故而，有
+        \[
+            \arg\min_xf(x,y,z)=
+            \begin{cases}
+                \operatorname{sgn}(y+z)\big(1+\frac{1}{2}|y+z|\big),&y+z\neq0,\\
+                [-1,1],&y+z=0.
+            \end{cases}
+        \]
+        同理可得，
+        \[
+            \arg\min\limits_{y}f(x,y,z)=
+            \begin{cases}
+                \operatorname{sgn}(x+z)\big(1+\frac{1}{2}|x+z|\big),&x+z\neq0,\\
+                [-1,1],&x+z=0,
+            \end{cases}
+        \]
+        \[
+            \arg\min_zf(x,y,z)=
+            \begin{cases}
+                \operatorname{sgn}(x+y)(1+\frac{1}{2}|x+y|),&x+y\neq0,\\
+                [-1,1],&x+y=0.
+            \end{cases}    
+        \]
+    \end{solution}
+\end{example}

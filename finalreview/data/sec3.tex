@@ -1,0 +1,431 @@
+\section{约束优化最优性条件}
+\subsection{单约束优化}
+\begin{example}
+    设$\boldsymbol{a}_1,\boldsymbol{a}_2,\cdots,\boldsymbol{a}_m\in\mathbb{R}^n$满足$\sum\limits_{i = 1}^{m}\boldsymbol{a}_{i}\neq \boldsymbol{0}$求解优化问题\Stars{5}{}
+    \[
+        \min\{\sum_{i=1}^{m}\|\boldsymbol{x}-\boldsymbol{a}_{i}\|^{2}\mid\boldsymbol{x}^{\mathrm{T}}\boldsymbol{x}=1\}
+    \]
+    \begin{solution}
+        令
+        \[
+            \begin{aligned}
+                L(\boldsymbol{x},\lambda)&=\sum\limits_{i = 1}^{m}\|\boldsymbol{x}-\boldsymbol{a}_{i}\|^{2}-\lambda(\boldsymbol{x}^{\mathrm{T}}\boldsymbol{x}-1)\\
+                &=\sum_{i=1}^{m}\sum_{j=1}^{n}\left( \boldsymbol{x}_j-(\boldsymbol{a}_{i})_{j} \right)^2-\lambda\left( \sum_{j = 1}^{n}\boldsymbol{x}_j^2-1\right)
+            \end{aligned}
+        \]
+        对$x_k$求偏导，得到
+        \[
+            \dfrac{\partial L}{\partial x_{k}} = \sum_{i = 1}^{m}2(x_{k}-(\boldsymbol{a}_{i})_{k})-\lambda\cdot 2 x_{k}
+        \]
+        故而有
+        \[
+            \nabla_{x}L = \begin{pmatrix}
+                \sum_{i = 1}^{m}2(x_{1}-(\boldsymbol{a}_{i})_{1})-\lambda 2x_{1}\\
+                \sum_{i = 1}^{m}2(x_{2}-(\boldsymbol{a}_{i})_{2})-\lambda 2x_{2}\\
+                \vdots\\
+                \sum_{i = 1}^{m}2(x_{n}-(\boldsymbol{a}_{i})_{n})-\lambda 2x_{n}\\
+            \end{pmatrix} 
+        \]
+        所以，有
+        \[
+            \begin{cases}
+                \sum\limits_{i = 1}^{m}2(\boldsymbol{x-\boldsymbol{a}_{i}}) = 2\lambda\boldsymbol{x}\\
+                \boldsymbol{x}^{\mathrm{T}}\boldsymbol{x}=1
+            \end{cases}
+        \]
+        设方程的解为$\boldsymbol{x}^*$，则$\boldsymbol{x}^*$与$\sum\limits_{i = 1}^{m}\boldsymbol{a}_i$同向或者反向。
+
+        若$\sum\limits_{i = 1}^{m}\boldsymbol{a}_i \neq \boldsymbol{0}$，则
+        \[
+            \boldsymbol{x}^*=\dfrac{\sum_{i=1}^m\boldsymbol{a}_i}{\|\sum_{i=1}^m\boldsymbol{a}_i\|}
+        \]
+        相应地，最优值为
+        \[
+            \begin{aligned}
+                f(\boldsymbol{x}^*) &= \sum_{i=1}^{m}\|\boldsymbol{x}^*-\boldsymbol{a}_{i}\|^{2} \\
+                & = \sum_{i=1}^{m}\left< \boldsymbol{x}^*-\boldsymbol{a}_{i},\boldsymbol{x}^*-\boldsymbol{a}_{i} \right>\\
+                & =\sum_{i=1}^{m}\|\boldsymbol{x}^*\|^2-2\left<\dfrac{\sum_{i=1}^m\boldsymbol{a}_i}{{\|\sum_{i=1}^m\boldsymbol{a}_i\|}},\sum_{i=1}^m\boldsymbol{a}_i\right>+\sum_{i=1}^m\|\boldsymbol{a}_i\|^2\\
+                &=m-2\|\sum_{i=1}^m\boldsymbol{a}_i\|+\sum_{i=1}^m\|\boldsymbol{a}_i\|^2
+            \end{aligned}
+        \]
+    \end{solution}
+\end{example}
+\subsection{线性规划的对偶}
+\begin{example}
+    线性规划的对偶\Stars{5}{}
+    \[
+        \begin{array}{rl}
+            \min & \boldsymbol{c}^\mathrm{T}\boldsymbol{x}\\
+            \mathrm{s.t.} & \boldsymbol{Ax}=\boldsymbol{b}\\
+            & \boldsymbol{x}\geqslant\boldsymbol{0}
+        \end{array}
+    \]
+    对偶
+    \[
+        \max_{\boldsymbol{u}\geq0,\boldsymbol{v}}\min_{\boldsymbol{x}\in \mathbb{R}^n}L(\boldsymbol{x},\boldsymbol{u},\boldsymbol{v})
+    \]
+    \[
+        \begin{aligned}
+            L(\boldsymbol{x};\boldsymbol{u},\boldsymbol{v})&=\boldsymbol{c}^\mathrm{T}\boldsymbol{x}-\boldsymbol{u}^\mathrm{T}\boldsymbol{x}-\boldsymbol{v}^\mathrm{T}(\boldsymbol{A}\boldsymbol{x}-\boldsymbol{b})\\
+            &=\left(\boldsymbol{c}-\boldsymbol{u}-\boldsymbol{A}^\mathrm{T}\boldsymbol{v}\right)^\mathrm{T}\boldsymbol{x}+\boldsymbol{v}^\mathrm{T}\boldsymbol{b},\quad\boldsymbol{u}\geqslant\boldsymbol{0}.
+        \end{aligned}
+    \]
+    \[
+        \begin{aligned}
+            \min_{\boldsymbol{x}\in\mathbb{R}^n}L(\boldsymbol{x};\boldsymbol{u},\boldsymbol{v})&=\min_{\boldsymbol{x}\in\mathbb{R}^n}\left(\boldsymbol{c}-\boldsymbol{u}-\boldsymbol{A}^\mathrm{T}\boldsymbol{v}\right)^\mathrm{T}\boldsymbol{x}+\boldsymbol{v}^\mathrm{T}\boldsymbol{b}\\
+            &=\begin{cases}
+                -\infty, & \boldsymbol{c}-\boldsymbol{u}-\boldsymbol{A}^\mathrm{T}\boldsymbol{v}\neq \boldsymbol{0} ,\\
+                \boldsymbol{v}^\mathrm{T}\boldsymbol{b},& \boldsymbol{c}-\boldsymbol{u}-\boldsymbol{A}^\mathrm{T}\boldsymbol{v}= \boldsymbol{0},
+            \end{cases}
+        \end{aligned}
+    \]
+    \[
+        \begin{array}{rl}
+            \max & (\boldsymbol{c}-\boldsymbol{u}-\boldsymbol{A}^\mathrm{T}\boldsymbol{v})^\mathrm{T}\boldsymbol{x}+\boldsymbol{b}^\mathrm{T}\boldsymbol{v}  \\
+            \mathrm{s.t.} & \nabla_{x}L(\boldsymbol{x};\boldsymbol{u},\boldsymbol{v})=\boldsymbol{c}-\boldsymbol{u}-\boldsymbol{A}^{\mathrm{T}}\boldsymbol{v}=\boldsymbol{0}  \\
+            &\boldsymbol{u}\geqslant 0
+        \end{array}
+    \]
+    化简得到
+    \[
+        \begin{array}{rl}
+            \max&\boldsymbol{v}^\mathrm{T}\boldsymbol{b}\\
+            \mathrm{s.t.}&\boldsymbol{A}^\mathrm{T}\boldsymbol{v}\leqslant \boldsymbol{c}
+        \end{array}
+    \]
+\end{example}
+\subsection{混合约束优化的对偶}
+\begin{example}
+    求下述优化问题的对偶\Stars{5}{}
+    \[
+        \begin{array}{rl}
+            \operatorname*{min}&f(x)=x_{1}^{2}+x_{2}^{2}\\
+            \mathrm{s.t.} & x_{1}+x_{2}-4\geq 0\\
+            &x\geq 0
+        \end{array}    
+    \]
+    \begin{solution}
+        Lagrange函数
+        \[
+            L(x,\lambda)=x_{1}^{2}+x_{2}^{2}-\lambda(x_{1}+x_{2}-4),\quad x\geq 0,\quad\lambda\geq 0
+        \]
+        Lagrange对偶$\max\limits_{\lambda\geqslant 0}\min\limits_{x\geqslant 0}L(\lambda,\boldsymbol{x})$
+        \[
+            \begin{aligned}
+                \theta(\lambda)& =\min_{x\geq0}L(x,\lambda)  \\
+                &=\min_{x\geq0}\{x_{1}^{2}+x_{2}^{2}-\lambda(x_{1}+x_{2}-4)\} \\
+                &=\left(\operatorname*{min}_{x_{1}\geq0}\{x_{1}^{2}-\lambda x_{1}\}+\operatorname*{min}_{x_{2}\geq0}\{x_{2}^{2}-\lambda x_{2}\}+4\lambda\right) \\
+                &=-\frac14\lambda^{2}-\frac14\lambda^{2}+4\lambda  \\
+                &=-\frac{1}{2}\lambda^{2}+4\lambda 
+            \end{aligned}  
+        \]
+        其中$x_1^* = x_2^* = \dfrac{1}{2}\lambda$
+        \[
+            \max_{\lambda\geq 0}\theta(\lambda)=-\frac{1}{2}\lambda^{2}+4\lambda=8
+        \]
+    \end{solution}    
+\end{example}
+\begin{example}
+    求解无约束优化问题\Stars{5}{}
+    \[
+        \min_{\boldsymbol{x}\in\mathbb{R}^n}\frac12\|\boldsymbol{A}\boldsymbol{x}-\boldsymbol{b}\|^2+\lambda\|\boldsymbol{x}\|_1
+    \]
+    \begin{solution}
+        令$\boldsymbol{y} = \boldsymbol{x}$得
+        \[
+            \begin{array}{rl}
+                \min&\dfrac{1}{2}\|\boldsymbol{A}\boldsymbol{x}-\boldsymbol{b}\|^2+\lambda\|\boldsymbol{y}\|_1\\
+                \mathrm{s.t.}&\boldsymbol{y}-\boldsymbol{x}=0
+            \end{array}
+        \]
+        对偶
+        \[
+            \max_{\boldsymbol{z}\in\mathbb{R}^n}\min_{\boldsymbol{x},\boldsymbol{y}\in\mathbb{R}^n} =\frac12\|\boldsymbol{A}\boldsymbol{x}-\boldsymbol{b}\|^2+\lambda\|\boldsymbol{y}\|_1+\boldsymbol{z}^{\mathrm{T}}(\boldsymbol{x}-\boldsymbol{y}).
+        \]
+        变量可分离
+        \[
+            \boxed{\min_{\boldsymbol{x}\in\mathbb{R}^n}\left(\frac12\|\boldsymbol{Ax}-\boldsymbol{b}\|^2+\boldsymbol{z}^{\mathrm{T}} \boldsymbol{x}\right)} + \boxed{\min_{\boldsymbol{y}\in\mathbb{R}^n}\left(\lambda\|\boldsymbol{y}\|_1-\boldsymbol{z}^{\mathrm{T}} \boldsymbol{y}\right)}
+        \]
+        对于$\min\limits_{\boldsymbol{y}\in\mathbb{R}^n}\left(\lambda\|\boldsymbol{y}\|_1-\boldsymbol{z}^{\mathrm{T}} \boldsymbol{y}\right)$
+        有
+        \[
+            \min_{\boldsymbol{y}\in\mathbb{R}^n}\lambda\|\boldsymbol{y}\|_1-\boldsymbol{z}^{\mathrm{T}}\boldsymbol{y}=
+            \begin{cases}
+                0,& \|\boldsymbol{z}\|_\infty\leqslant\lambda,\\
+                -\infty,& \|\boldsymbol{z}\|_\infty>\lambda.
+            \end{cases}
+        \]
+        综上，将$\boldsymbol{x}^* = \left( \boldsymbol{A}^{\mathrm{T}}\boldsymbol{A} \right)^{-1}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{b}-\boldsymbol{z})$代入得到
+        \[
+            \begin{aligned}
+                &\max_{\boldsymbol{z}\in\mathbb{R}^n}\min_{\boldsymbol{x},\boldsymbol{y}\in\mathbb{R}^n}L(\boldsymbol{x},\boldsymbol{y},\boldsymbol{z})\\
+                &=\max_{\|\boldsymbol{z}\|_\infty\leqslant\lambda}\frac12\|\boldsymbol{A}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A})^{-1}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{b}-\boldsymbol{z})-\boldsymbol{b}\|^2+\boldsymbol{z}^{\mathrm{T}}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A})^{-1}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{b}-\boldsymbol{z})\\
+                &=\max_{\|\boldsymbol{z}\|_\infty\leqslant\lambda}-\frac12\boldsymbol{z}^{\mathrm{T}}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A})^{-1}\boldsymbol{z}+\boldsymbol{z}^{\mathrm{T}}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A})^{-1}\boldsymbol{A}^{\mathrm{T}}\boldsymbol{b}\\
+                &=\min_{\|\boldsymbol{z}\|_\infty\leqslant\lambda}\frac12\boldsymbol{z}^{\mathrm{T}}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A})^{-1}\boldsymbol{z}-\boldsymbol{z}^{\mathrm{T}}(\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A})^{-1}\boldsymbol{A}^{\mathrm{T}}\boldsymbol{b}
+            \end{aligned}
+        \]
+        \begin{itemize}
+            \item 原问题为线性约束的凸优化问题, 强对偶定理成立.
+            \item 从而，原问题等价地化为一带简单约束的光滑优化问题.
+        \end{itemize}
+    \end{solution}
+\end{example}
+\subsection{等式约束二次规划—消去法}
+\subsection{等式约束二次规划--Lagrange方法}
+\begin{example}
+    求解以下\colorbox{cyan!50}{无约束二次规划}\Stars{4}{}
+    \[
+        \begin{array}{rl}
+            \min & Q (\boldsymbol{x}) = x_1^2-x_2^2-x_3^2\\
+            \operatorname{s.t.} & x_1+x_2+x_3 = 1\\
+            & x_2-x_3 = 1
+        \end{array}
+    \]
+    \begin{solution}
+        \[
+            \boldsymbol{x}_B = \begin{pmatrix}
+                x_1\\x_2
+            \end{pmatrix},\, \boldsymbol{x}_N = x_3
+        \]
+        则$x_2 = x_3+1,x_1 = -2x_3$
+        问题转化为
+        \[
+            \begin{array}{l}
+                \min Q(x_3) = 4x_3^2-(x_3+1)^2-x_3^2\\
+                =2x_3^2-x_3-1
+            \end{array}
+        \]
+        得到
+        \[
+            \begin{array}{cc}
+                x_3^* = \dfrac{1}{2} &
+                \boldsymbol{x}^* = \begin{pmatrix}
+                    -1\\ 3/2\\ 1/2
+                \end{pmatrix}
+            \end{array}
+        \]
+    \end{solution}
+\end{example}
+
+\begin{example}
+    用Lagrange法求解如下问题\Stars{5}{}
+    \[
+        \begin{array}{rl}
+            \operatorname*{min}& Q(\boldsymbol{x})=3x_{1}^{2}+2x_{1}x_{2}+x_{1}x_{3}+2.5x_{2}^{2}+2x_{2}x_{3}+2x_{3}^{2}-8x_{1}-3x_{2}-3x_{3}\\
+            \mathrm{s.t.}&x_{1}+x_{3}=3\\
+            &x_{2}+x_{3}=0
+        \end{array}
+    \]
+    \begin{solution}
+        由目标函数及约束条件
+        \[
+            \boldsymbol{G}=
+                \begin{pmatrix}
+                    6&2&1\\2&5&2\\1&2&4
+                \end{pmatrix},\,
+            \boldsymbol{g}=
+                \begin{pmatrix}
+                    -8\\-3\\-3
+                \end{pmatrix},\,
+            \boldsymbol{A}=
+                \begin{pmatrix}
+                    1&0&1\\0&1&1
+                \end{pmatrix},\,
+            \boldsymbol{b}=
+                \begin{pmatrix}
+                    3\\0
+                \end{pmatrix}
+            \]
+            KKT系统
+            \[
+                \begin{pmatrix}
+                    6&2&1&-1&0\\2&5&2&0&-1\\1&2&4&-1&-1\\1&0&1&0&0\\0&1&1&0&0
+                \end{pmatrix}
+                \begin{pmatrix}
+                    x_1\\x_2\\x_3\\\lambda_1\\\lambda_2
+                \end{pmatrix} = 
+                \begin{pmatrix}
+                    8\\3\\3\\-3\\0
+                \end{pmatrix}
+            \]
+            解得
+            \[
+                \boldsymbol{x}^{*}=
+                \begin{pmatrix}
+                    {2}\\{-1}\\{1}
+                \end{pmatrix}
+                ,\quad\boldsymbol{\lambda}^{*}=
+                \begin{pmatrix}
+                    {3}\\{-2}
+                \end{pmatrix}
+            \]
+    \end{solution}
+\end{example}
+\subsection{二次规划有效集方法}
+\begin{example}
+    求解二次规划问题\Stars{5}{}
+    \[
+        \begin{array}{rl}
+            \operatorname*{min} & Q(\boldsymbol{x})=x_{1}^{2}+x_{2}^{2}-2x_{1}-4x_{2}\\
+            \mathrm{s.t.}&-x_{1}-x_{2}+1\geqslant0\\
+            &x_{1},x_{2}\geqslant 0
+        \end{array}    
+    \]
+    \begin{solution}
+        \colorbox{cyan!50}{$k = 0$：}
+
+        取初始点
+        \[
+            \boldsymbol{x}^{(0)}=\begin{pmatrix}0\\0\end{pmatrix},\, S_0=\mathcal{A}(\boldsymbol{x}^{(0)})=\{2,3\}
+        \]
+        求解等式约束优化子问题
+        \[
+            \begin{array}{rl}
+                \min & d_{1}^{2}+d_{2}^{2}-2d_{1}-4d_{2}\\
+                \mathrm{s.t.} & d_{1}=0\\
+                & d_{2}=0
+            \end{array}
+        \]
+        KKT条件
+        \[
+            \left\{
+                \begin{array}{l}
+                    2d_1-2-\lambda_1 = 0\\
+                    2d_2-4-\lambda_2 = 0\\
+                    d_1 = 0\\
+                    d_2 = 0
+                \end{array}
+            \right.
+        \]
+        得最优解和相应的Lagrange乘子
+        \[
+            \boldsymbol{d}^{(0)}=\begin{pmatrix}0\\0\end{pmatrix},\,
+            \boldsymbol{\lambda}^{(0)}=\begin{pmatrix}-2\\-4\end{pmatrix}
+        \]
+        因为$\boldsymbol{d}^{(0)} = \boldsymbol{0}$，新的迭代点为
+        \[
+            \boldsymbol{x}^{(1)}= \boldsymbol{x}^{(0)} = \begin{pmatrix}0\\0\end{pmatrix}
+        \]
+        因为$\lambda_{i} <0$，修正指标集
+        \[
+            S_1=S_0/\{3\}=\mathcal{A}_0/\{3\}=\{2\}
+        \]
+
+        \colorbox{cyan!50}{$k = 1$：}
+
+        求解子问题
+        \[
+            \begin{array}{rl}
+                \operatorname*{min}&d_{1}^{2}+d_{2}^{2}-2d_{1}-4d_{2}\\
+                \mathrm{s.t.}&d_{1}=0
+            \end{array}
+        \]
+        KKT条件
+        \[
+            \left\{
+                \begin{array}{l}
+                    2d_1-2-\lambda_1 = 0\\
+                    2d_2-4 = 0\\
+                    d_1 = 0\\
+                \end{array}
+            \right.
+        \]
+        得最优解
+        \[
+            \boldsymbol{d}^{(1)}=\begin{pmatrix}0\\2\end{pmatrix},\,
+            \boldsymbol{\lambda}^{(1)}=\begin{pmatrix}-2\end{pmatrix}
+        \]  
+        因为$\boldsymbol{d}^{(1)}\neq \boldsymbol{0}$，转第三步，计算步长$\alpha$，其中$i\in\mathcal{I}/S_{1} = \left\{ 1,2,3 \right\}/\left\{ 2 \right\} = \left\{ 1,3 \right\}$
+        \newline
+        因为
+        \[
+            \begin{array}{l}
+                \boldsymbol{a}_{1}^{\mathrm{T}}\boldsymbol{d}^{(1)} =
+                \begin{pmatrix}
+                    -1 & -1
+                \end{pmatrix}\cdot
+                \begin{pmatrix}
+                    0 \\ 2
+                \end{pmatrix} = -2 \\
+                \boldsymbol{a}_{2}^{\mathrm{T}}\boldsymbol{d}^{(1)}  =
+                \begin{pmatrix}
+                    0 & 1
+                \end{pmatrix}\cdot
+                \begin{pmatrix}
+                    0 \\ 2
+                \end{pmatrix} = 2>0
+            \end{array}
+        \]
+        \[
+            \begin{aligned}
+                \alpha_{1}& =\min\left\{1,\frac{b_{i}-\boldsymbol{a}_{i}^{\mathrm{T}}\boldsymbol{x}^{(1)}}{\boldsymbol{a}_{i}^{\mathrm{T}}\boldsymbol{d}^{(1)}}\mid i=1,3,\boldsymbol{a}_{i}^{\mathrm{T}}\boldsymbol{d}^{(1)}<0\right\}  \\
+                &=\min\left\{1,\dfrac{-1-\begin{pmatrix}
+                    -1 & -1
+                \end{pmatrix}\cdot
+                \begin{pmatrix}
+                    0 \\ 0
+                \end{pmatrix}}{-2}\right\} = \dfrac{1}{2}
+            \end{aligned}
+        \]
+        从$\mathcal{I}/S_{1} = \left\{ 1,3 \right\}$中取
+        \[
+            \begin{array}{l}
+                \boldsymbol{a}_{1}^{\mathrm{T}}\boldsymbol{x}^{(2)} = \begin{pmatrix}
+                    -1 & -1
+                \end{pmatrix}\cdot
+                \begin{pmatrix}
+                    0 \\ 1
+                \end{pmatrix} = -1 =
+                \boldsymbol{b}_1 \\
+                \boldsymbol{a}_{3}^{\mathrm{T}}\boldsymbol{x}^{(2)} = \begin{pmatrix}
+                    0 & 1
+                \end{pmatrix}\cdot
+                \begin{pmatrix}
+                    0 \\ 1
+                \end{pmatrix} = -1 \neq
+                \boldsymbol{b}_3 = 0
+            \end{array}
+        \]
+        不等式积极约束$i = 1$
+        令
+        \[
+            \boldsymbol{x}^{(2)}=\boldsymbol{x}^{(1)}+\alpha_1\boldsymbol{d}^{(1)}=\begin{pmatrix}0\\1\end{pmatrix},\,S_2 = S_1\cup \{1\} = \{1,2\}
+        \]
+
+        \colorbox{cyan!50}{$k = 3$：}
+
+        求解子问题
+        \[
+            \begin{array}{rl}
+                \operatorname*{min}&d_{1}^{2}+d_{2}^{2}-2d_{1}-2d_{2}\\
+                \mathrm{s.t.}&-d_{1}-d_2=0\\
+                &d_1 = 0
+            \end{array}
+        \]
+        KKT条件
+        \[
+            \left\{
+                \begin{array}{l}
+                    2d_1-2+\lambda_1 = 0\\
+                    2d_2-2+\lambda_1-\lambda_2 = 0\\
+                    d_1+d_2 = 0\\
+                    d_1 = 0
+                \end{array}
+            \right.
+        \]
+        得最优解
+        \[
+            \boldsymbol{d}^{(2)}=\begin{pmatrix}0\\0\end{pmatrix},\,\boldsymbol{\lambda}^{(2)}=\begin{pmatrix}2\\0\end{pmatrix}
+        \] 
+        由$\boldsymbol{d}^{(2)}=0$，且对于$\forall i\in S_{k}\cap \mathcal{I}(\boldsymbol{x}^{(2)}) = \left\{ 1,2 \right\},\lambda_{i}^{(2)}\geqslant 0$算法停止。原问题最优解和最优Lagrange乘子分别为：
+        \[
+            \boldsymbol{x}^*=\boldsymbol{x}^{(2)}=\begin{pmatrix}0\\1\end{pmatrix},\quad 
+            \boldsymbol{\lambda}^* = \begin{pmatrix}
+                2\\0\\0
+            \end{pmatrix}
+        \]
+        \[
+            f(\boldsymbol{x}^{*}) = -3
+        \]
+    \end{solution}
+\end{example}
